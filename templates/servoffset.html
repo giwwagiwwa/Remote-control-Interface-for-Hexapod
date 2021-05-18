@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1> Servo Offset </h1>
+<h2> Estado BT: {{ estadobt }}</h2>
+<form method="POST" action="/servoffset">
+  <p><input type="submit" value="Conectar BT" name="conectarbt"/></p>
+</form>
+
+<h4>Guardar los cambios:</h4>
+<form method="POST" action="/guardaroffset">
+  <input type="submit" value="Guardar" >
+</form>
+
+<table border="3">
+  <tr>
+    <h3><br> Tabla de offsets actuales</h3>
+  </tr>
+  <tr>
+    <th>Articulación</th>
+    {% for servo in offsets %}
+    <th>Servo {{servo.id}}</th>
+    {% endfor %}
+  </tr>
+  <tr>
+    <th>Coxa</th>
+    {% for servo in offsets %}
+    <td>{{servo.Coxa}}</td>
+    {% endfor %}
+  </tr>
+  <tr>
+    <th>Femur</th>
+    {% for servo in offsets %}
+    <td>{{servo.Femur}}</td>
+    {% endfor %}
+  </tr>
+  <tr>
+    <th>Tibia</th>
+    {% for servo in offsets %}
+    <td>{{servo.Tibia}}</td>
+    {% endfor %}
+  </tr>
+</table>
+<br>
+
+<h3>Modificar Servo seleccionado:</h3>
+{% if servoselected%}
+<h2>SERVO SELECCIONADO: {{servoselected}}</h2>
+{% else %}
+<h2>SERVO SELECCIONADO: -</h2>
+{% endif %}
+{% if articselected%}
+<h2>ARTIC SELECCIONADA: {{articselected}}</h2>
+{% else %}
+<h2>ARTIC SELECCIONADA: -</h2>
+{% endif %}
+<form class="form-inline" action="/selectservo" method="POST">
+  <span class="input-group-addon">Selecciona el servo: </span>
+  <br>
+  <select name="numservo" class="selectpicker">
+    {% for s in servos %}
+    <option value={{s}}>{{s}}</option>
+    {% endfor %}
+  </select>
+  <br>
+  <span class="input-group-addon">Selecciona la articulación: </span>
+  <br>
+  <select name="articulacion" class="selectpicker">
+    {% for a in artic %}
+    <option value={{a}}>{{a}}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Seleccionar</button>
+</form>
+
+<br>
+<h3>Modificar valor del offset:</h3>
+<form action="/incdec" method="POST">
+  <div>
+    <label>Incrementar/Decrementar offset:</label>
+    <br>
+    <input type="submit" value="+5" name="inc5" style="height:50px; width:50px"/>
+    <input type="submit" value="-5" name="dec5" style="height:50px; width:50px"/>
+  </div>
+</form>
+<br>
+<form action="/cambiardato" method="POST">
+  <label>Introduce el valor del offset: </label>
+  <p><input type="number" name="useroffset" required/></p>
+  <p><input type="submit" value="Enviar" name="action1"/></p>
+</form>
+
+{% endblock content %}
