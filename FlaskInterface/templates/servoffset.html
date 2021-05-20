@@ -1,15 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1> Servo Offset </h1>
-<h2> Estado BT: {{ estadobt }}</h2>
-<form method="POST" action="/servoffset">
-  <p><input type="submit" value="Conectar BT" name="conectarbt"/></p>
-</form>
-
-<h4>Guardar los cambios:</h4>
-<form method="POST" action="/guardaroffset">
-  <input type="submit" value="Guardar" >
-</form>
 
 <table border="3">
   <tr>
@@ -87,6 +78,12 @@
   <label>Introduce el valor del offset: </label>
   <p><input type="number" name="useroffset" required/></p>
   <p><input type="submit" value="Enviar" name="action1"/></p>
+</form>
+
+<h4>Salir</h4>
+<form method="POST" action="/saliroffset">
+  <input type="submit" value="Guardar" name="guardar">
+  <input type="submit" value="Descartar" name="descartar">
 </form>
 
 {% endblock content %}

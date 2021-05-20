@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1> Activar Servo Offset </h1>
+<h1> Servo Offset </h1>
+<h2> Estado BT: {{ estadobt }}</h2>
+<form method="POST" action="/preservoffset">
+  <p><input type="submit" value="Conectar BT" name="conectarbt"/></p>
+</form>
+{% endblock content %}
