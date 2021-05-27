@@ -12,14 +12,6 @@ hc06_direccion = '00:20:12:08:42:2F'
 serie_port = '/dev/rfcomm0'
 serie_baud = 38400
 
-#estado bt
-pos_estado_bt = {
-    '0': 'Desconectado',
-    '1': 'Conectando',
-    '2': 'Conectado'
-}
-estado_bt = pos_estado_bt['0']
-
 #lista de los offsets iniciales (diccionarios)
 offsets_servos = [
     {
@@ -66,21 +58,12 @@ err_msg = ''
 articselected = ''
 servoselected = 0
 
-def conectar_bt():
-    global estado_bt
-    if estado_bt == 'Desconectado':
-        estado_bt = pos_estado_bt['1']
-        #ejecutamos script en segundo plano para conectar a bt
-        os.system("nohup python3 ./forms.py &")
-        time.sleep(5)
-        #comprovamos si se ha conectado al bt
-        stdoutdata = sp.getoutput("hcitool con")
-        if hc06_direccion in stdoutdata.split():
-            print("Conectado a BT")
-        #check conexion
-            estado_bt = pos_estado_bt['2']
-        else:
-            estado_bt = pos_estado_bt['0']
+#función para enviar los valores de los offsets por el puerto serie
+def enviar_valor_offset(valor):
+    #convertir el valor a string
+    ser = serial.Serial(port=serie_port, baudrate=serie_baud)
+    
+
 
 #modifica la función ruta con parametros nuestros sin tener que reescribir (decorator)
 @app.route("/")#rutas del browser
@@ -89,26 +72,32 @@ def home():
     return render_template('home.html',title='Hexapod Web Server', offsets=offsets_servos) #le pasamos las variables a la plantilla
 
 @app.route("/preservoffset",methods=['POST','GET'])
-def preservoffset(): 
-    if request.method == 'POST':
-        if "conectarbt" in request.form:
-            #if estado_bt == 'Conectado':
-            try:
-                ser= serial.Serial(port=serie_port, baudrate=serie_baud)
-                ser.write(b"O")
-                ser.close()
-            except:
-                print("error abriendo puerto serie")
-            return render_template('servoffset.html', 
-                                    title='Control offsets',
-                                    offsets=offsets_servos, 
-                                    estadobt=estado_bt,
-                                    artic=artic,
-                                    servos=servos,
-                                    articselected=articselected,
-                                    servoselected=servoselected)
+def preservoffset():
+    #comprobar conexión bluetooth
+    stdoutdata = sp.getoutput("hcitool con")
+    time.sleep(1)
+    #si estamos conectados abrimos puerto serie, entramos modo offset y cargamos la pagina
+    if hc06_direccion in stdoutdata.split():
+        print("Conectado a BT")
+        #intentamos abrir el puerto serie
+        try:
+            ser= serial.Serial(port=serie_port, baudrate=serie_baud)
+            #enviamos caracter para entrar al modo servo offset
+            ser.write(b"O")
+            ser.close()
+        except:
+            print("error abriendo puerto serie")
+        #cargamos la pagina
+        return render_template('servoffset.html', 
+                                title='Control offsets',
+                                offsets=offsets_servos,
+                                artic=artic,
+                                servos=servos,
+                                articselected=articselected,
+                                servoselected=servoselected)
+    #si no estamos conectados cargamos la página de preservooffset
+    return render_template('preservoffset.html', title='Control offsets')
 
-    return render_template('preservoffset.html', title='Control offsets',estadobt=estado_bt)
 
 @app.route("/saliroffset",methods=['POST','GET'])
 def saliroffset():
@@ -124,18 +113,18 @@ def saliroffset():
     ser.close()
     return render_template('home.html',title='Hexapod Web Server', offsets=offsets_servos)
 
+
 @app.route("/servoffset",methods=['POST','GET'])
 def servoffset():
     #lista articulaciones
-
     return render_template('servoffset.html', 
                             title='Control offsets',
-                            offsets=offsets_servos, 
-                            estadobt=estado_bt,
+                            offsets=offsets_servos,
                             artic=artic,
                             servos=servos,
                             articselected=articselected,
                             servoselected=servoselected)
+
 
 @app.route("/incdec",methods=['POST','GET'])
 def incdec():
@@ -145,12 +134,12 @@ def incdec():
         decrementar_offset()
     return render_template('servoffset.html', 
                             title='Control offsets',
-                            offsets=offsets_servos, 
-                            estadobt=estado_bt,
+                            offsets=offsets_servos,
                             artic=artic,
                             servos=servos,
                             articselected=articselected,
                             servoselected=servoselected)     
+
 
 def incrementar_offset():
     print("inc")
@@ -161,11 +150,15 @@ def incrementar_offset():
 def decrementar_offset():
     print("dec")
     global articselected, servoselected
+    #calculamos el nuevo valor local
     offsets_servos[servoselected-1][articselected] -=5
+    #enviamos el comando por el puerto serie
+
 
 @app.route("/about")#rutas del browser
 def about():
     return render_template('about.html', title='About')
+
 
 @app.route("/selectservo", methods=['GET','POST'])
 def recogerdato():
@@ -177,8 +170,7 @@ def recogerdato():
     print("enviar al puerto serie servo+articulacion")
     return render_template('servoffset.html', 
                     title='Control offsets',
-                    offsets=offsets_servos, 
-                    estadobt=estado_bt,
+                    offsets=offsets_servos,
                     artic=artic,
                     servos=servos,
                     articselected=articselected,
@@ -195,8 +187,7 @@ def cambiardato():
         print("actualizar puerto serie")
     return render_template('servoffset.html', 
                             title='Control offsets',
-                            offsets=offsets_servos, 
-                            estadobt=estado_bt,
+                            offsets=offsets_servos,
                             artic=artic,
                             servos=servos,
                             articselected=articselected,

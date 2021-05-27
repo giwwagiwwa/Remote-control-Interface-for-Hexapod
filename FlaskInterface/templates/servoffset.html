@@ -34,7 +34,7 @@
 <br>
 
 <h3>Modificar Servo seleccionado:</h3>
-{% if servoselected%}
+{% if servoselected %}
 <h2>SERVO SELECCIONADO: {{servoselected}}</h2>
 {% else %}
 <h2>SERVO SELECCIONADO: -</h2>
@@ -64,6 +64,7 @@
 </form>
 
 <br>
+{% if servoselected %}
 <h3>Modificar valor del offset:</h3>
 <form action="/incdec" method="POST">
   <div>
@@ -85,5 +86,5 @@
   <input type="submit" value="Guardar" name="guardar">
   <input type="submit" value="Descartar" name="descartar">
 </form>
-
+{% endif %}
 {% endblock content %}
