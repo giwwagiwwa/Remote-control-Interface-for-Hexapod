@@ -1,5 +1,5 @@
 import time, subprocess as sp, os, serial
-from flask import Flask, url_for, request
+from flask import Flask, request
 from flask.templating import render_template
 
 
@@ -89,7 +89,7 @@ def home():
     return render_template('home.html',title='Hexapod Web Server', offsets=offsets_servos) #le pasamos las variables a la plantilla
 
 @app.route("/preservoffset",methods=['POST','GET'])
-def preservoffset():
+def preservoffset(): 
     if request.method == 'POST':
         if "conectarbt" in request.form:
             #if estado_bt == 'Conectado':
@@ -108,22 +108,23 @@ def preservoffset():
                                     articselected=articselected,
                                     servoselected=servoselected)
 
-
     return render_template('preservoffset.html', title='Control offsets',estadobt=estado_bt)
 
 @app.route("/saliroffset",methods=['POST','GET'])
 def saliroffset():
+    ser= serial.Serial(port=serie_port, baudrate=serie_baud)
+    ser.write(b"$")
+    time.sleep(1)
     if "guardar" in request.form:
         print("Guardar offsets")
+        ser.write(b"S")
     elif "descartar" in request.form:
         print("Descartar offsets")
-        ser= serial.Serial(port=serie_port, baudrate=serie_baud)
-        ser.write(b"$")
-        time.sleep(1)
         ser.write(b"N")
+    ser.close()
     return render_template('home.html',title='Hexapod Web Server', offsets=offsets_servos)
 
-@app.route("/servoffset",methods=['POST','GET'])#ambas rutas llevan a la misma función hello()
+@app.route("/servoffset",methods=['POST','GET'])
 def servoffset():
     #lista articulaciones
 
