@@ -51,18 +51,10 @@ offsets_servos = [
 artic = ['Coxa','Femur','Tibia']
 servos = [1,2,3,4,5,6]
 
-#mensaje de error
-err_msg = ''
 
 #selecciones
 articselected = ''
 servoselected = 0
-
-#función para enviar los valores de los offsets por el puerto serie
-def enviar_valor_offset(valor):
-    #convertir el valor a string
-    ser = serial.Serial(port=serie_port, baudrate=serie_baud)
-    
 
 
 #modifica la función ruta con parametros nuestros sin tener que reescribir (decorator)
@@ -81,10 +73,21 @@ def preservoffset():
         print("Conectado a BT")
         #intentamos abrir el puerto serie
         try:
-            ser= serial.Serial(port=serie_port, baudrate=serie_baud)
-            #enviamos caracter para entrar al modo servo offset
-            ser.write(b"O")
-            ser.close()
+            # ser= serial.Serial(port=serie_port, baudrate=serie_baud)
+            # #enviamos caracter para entrar al modo servo offset
+            # ser.write(b"O")
+            # time.sleep(1)
+            # bytes_recibidos = ser.readline() #linea cmd eok...
+            # bytes_recibidos = ser.readline().decode('utf-8').strip().split(",") #datos
+            # ser.close()
+            bytes_recibidos = ['-1','-2','-3','-4','-5','-6','-7','-8','-9','-10','-11','-12','-13','-14','-15','-16','-17','-18',]
+            #ponemos los datos recibidos en la estructura local
+            indice = 0
+            for servo in offsets_servos:
+                servo['Coxa'] = int(bytes_recibidos[indice])
+                servo['Femur'] = int(bytes_recibidos[indice+1])
+                servo['Tibia'] = int(bytes_recibidos[indice+2])
+                indice +=3
         except:
             print("error abriendo puerto serie")
         #cargamos la pagina
@@ -96,7 +99,7 @@ def preservoffset():
                                 articselected=articselected,
                                 servoselected=servoselected)
     #si no estamos conectados cargamos la página de preservooffset
-    return render_template('preservoffset.html', title='Control offsets')
+    return render_template('preservoffset.html', title='Control offsets', estado='Error conectando')
 
 
 @app.route("/saliroffset",methods=['POST','GET'])
@@ -128,10 +131,16 @@ def servoffset():
 
 @app.route("/incdec",methods=['POST','GET'])
 def incdec():
-    if "inc5" in request.form:
-        incrementar_offset()
-    elif "dec5" in request.form:
-        decrementar_offset()
+    global articselected, servoselected
+    #abrimos puerto serie
+    # ser= serial.Serial(port=serie_port, baudrate=serie_baud)   
+    if "inc5" in request.form: #incrementar 5
+        offsets_servos[servoselected-1][articselected] +=5
+        # ser.write(b"+") 
+    elif "dec5" in request.form: #decrementar 5
+        offsets_servos[servoselected-1][articselected] -=5
+        # ser.write(b"-")
+    # ser.close()
     return render_template('servoffset.html', 
                             title='Control offsets',
                             offsets=offsets_servos,
@@ -139,20 +148,6 @@ def incdec():
                             servos=servos,
                             articselected=articselected,
                             servoselected=servoselected)     
-
-
-def incrementar_offset():
-    print("inc")
-    global articselected, servoselected
-    offsets_servos[servoselected-1][articselected] +=5
-
-
-def decrementar_offset():
-    print("dec")
-    global articselected, servoselected
-    #calculamos el nuevo valor local
-    offsets_servos[servoselected-1][articselected] -=5
-    #enviamos el comando por el puerto serie
 
 
 @app.route("/about")#rutas del browser
@@ -166,8 +161,16 @@ def recogerdato():
     global articselected, servoselected
     articselected = request.form.get('articulacion')
     servoselected = int(request.form.get('numservo'))
-    #enviar al puerto serie
-    print("enviar al puerto serie servo+articulacion")
+    #String con la articulación y el numero de servo
+    dato = str(servoselected-1)+articselected[0]
+    #enviar al puerto serie dato
+        # ser= serial.Serial(port=serie_port, baudrate=serie_baud)
+        # ser.write(b"$")
+        #---------------------
+        # only an example, you can choose a different encoding
+        #bytes('example', encoding='utf-8')
+        # ser.close()
+    print(dato)
     return render_template('servoffset.html', 
                     title='Control offsets',
                     offsets=offsets_servos,

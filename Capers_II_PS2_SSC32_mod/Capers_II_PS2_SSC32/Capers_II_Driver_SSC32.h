@@ -553,12 +553,14 @@ void FindServoOffsets()
     cbRead = SSCRead((byte*)szTemp, sizeof(szTemp), 10000, 13);
     if (cbRead > 0)
       asOffsetsRead[sSN] = atoi((const char *)szTemp);
+      //Send the current saved offsets in the Botboarduino to the webserver
       Serial.print(asOffsetsRead[sSN]);
       Serial.print(",");
     SSCSerial.print("#");
     SSCSerial.print(abSSCServoNum[sSN], DEC);
     SSCSerial.println("P1500");
   }
+  //Print end of line to detect in pYthon script
   Serial.println("");
 
   // OK lets move all of the servos to their zero point.
