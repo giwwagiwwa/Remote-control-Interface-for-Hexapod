@@ -4,7 +4,7 @@ from flask.templating import render_template
 
 
 app = Flask(__name__)
-#Flask puede buscar las templates y static en las carpetas por defecto
+#Carpetas templates y static por defecto
 
 
 #parametros Bt
@@ -14,7 +14,7 @@ serie_port = '/dev/rfcomm0'
 serie_baud = 38400
 
 
-#lista de los offsets iniciales (array de diccionarios)
+#lista de los offsets iniciales
 offsets_servos = [
     {
         'id': 1,
@@ -213,6 +213,6 @@ def recogerdato():
                     servoselected=servoselected)   
        
 
-#si lo ejecutamos con Python directamente el __name__ es igual a __main__ por lo que hará el .run
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
