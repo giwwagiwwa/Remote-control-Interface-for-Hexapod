@@ -63,39 +63,41 @@ servoselected = 0
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html',title='Hexapod Web Server', offsets=offsets_servos) #le pasamos las variables a la plantilla
+    return render_template('home.html')
 
 
 @app.route("/preservoffset",methods=['POST','GET'])
 def preservoffset():
-    #comprobar conexión bluetooth
+    #comprobar conexion bluetooth
     stdoutdata = sp.getoutput("hcitool con")
     time.sleep(1)
-    #si estamos conectados abrimos puerto serie, entramos modo offset y cargamos la pagina
+    #si estamos conectados entramos modo offset
     if hc06_direccion in stdoutdata.split():
         print("Conectado a BT")
-    #else:
         #intentamos abrir el puerto serie
         try:
-            ser= serial.Serial(port=serie_port, baudrate=serie_baud)
+            ser= serial.Serial(port=serie_port, 
+                               baudrate=serie_baud)
             #enviamos caracter para entrar al modo servo offset
             ser.write(b"O")
             time.sleep(1)
             bytes_recibidos = ser.readline() #linea cmd eok...
-            bytes_recibidos = ser.readline().decode('utf-8').strip().split(",") #datos
+            bytes_recibidos = ser.readline().decode('utf-8').strip().split(",")
             ser.close()
         except:
-            print("error abriendo puerto serie")
-            bytes_recibidos = ['-1','-2','-3','-4','-5','-6','-7','-8','-9','-10','-11','-12','-13','-14','-15','-16','-17','-18',]
-        #ponemos los datos recibidos en la estructura local
+            print("Error abriendo puerto serie")
+            #datos de prueba
+            bytes_recibidos = ['-1','-2','-3','-4','-5','-6',
+                               '-7','-8','-9','-10','-11','-12',
+                               '-13','-14','-15','-16','-17','-18',]
+        #Guardamos los datos recibidos en la estructura local
         indice = 0
         for servo in offsets_servos:
             servo['Coxa'] = int(bytes_recibidos[indice])
             servo['Femur'] = int(bytes_recibidos[indice+1])
             servo['Tibia'] = int(bytes_recibidos[indice+2])
             indice +=3
-
-        #cargamos la pagina
+        #Cargamos la pagina
         return render_template('servoffset.html', 
                                 title='Control offsets',
                                 offsets=offsets_servos,
@@ -104,7 +106,7 @@ def preservoffset():
                                 articselected=articselected,
                                 servoselected=servoselected)
     #si no estamos conectados cargamos la página de preservooffset
-    return render_template('preservoffset.html', title='Control offsets', estado='Error conectando')
+    return render_template('preservoffset.html', title='Control offsets')
 
 
 @app.route("/saliroffset",methods=['POST','GET'])
@@ -191,7 +193,7 @@ def recogerdato():
     global articselected, servoselected
     articselected = request.form.get('articulacion')
     servoselected = int(request.form.get('numservo'))
-    #String con la articulación y el numero de servo para seleccionarlo
+    #String con la articulacion y el numero de servo para seleccionarlo
     dato = str(servoselected-1)+articselected[0]
     #enviar al puerto serie dato
     try:

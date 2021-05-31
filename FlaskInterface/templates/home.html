@@ -1,7 +1,6 @@
 <!-- como el layout lo hemos definido en layout.html aqui solo va el codigo del body-->
-{% extends "layout.html" %}<!-- hacemos override del content en el layout.html-->
+{% extends "layout.html" %}
 {% block content %}
-<!-- bloque de código-->
 <h1>Estado: </h1>
-<img src="{{url_for('static',filename='hexapod.jpg')}}" width="500" height="500"/>    
-{% endblock content %}<!-- especificamos el content que estamos cerrando (puede haber múltiples)-->
+<img src="{{url_for('static',filename='hexapod.jpg')}}" width="500" height="500"/>
+{% endblock content %}

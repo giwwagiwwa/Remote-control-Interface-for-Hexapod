@@ -498,7 +498,7 @@ void setup(){
   #ifdef OPT_SINGLELEG
   g_InControlState.SelectedLeg = 255; // No Leg selected
   PrevSelectedLeg = 255;
-#endif
+  #endif
   // Body Positions
   g_InControlState.BodyPos.x = 0;
   g_InControlState.BodyPos.y = 0;
@@ -624,8 +624,8 @@ void loop(void)
     || (abs(g_InControlState.TravelLength.y)>cTravelDeadZone) || (g_InControlState.ForceGaitStepCnt != 0) || fWalking;
 
         DBGSerial.print("T("); 
-		DBGSerial.print(fWalking, DEC);
-		DBGSerial.print(" ");
+		    DBGSerial.print(fWalking, DEC);
+		    DBGSerial.print(" ");
         DBGSerial.print(g_InControlState.TravelLength.x,DEC); 
         DBGSerial.print(","); 
         DBGSerial.print(g_InControlState.TravelLength.y,DEC); 
