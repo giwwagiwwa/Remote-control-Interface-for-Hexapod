@@ -120,7 +120,7 @@ def saliroffset():
     if "guardar" in request.form:
         print("Guardar offsets")
         try:
-            ser.write(b"S")
+            ser.write(b"Y")
         except:
             print("Error enviando dato al puerto serie")
     elif "descartar" in request.form:
