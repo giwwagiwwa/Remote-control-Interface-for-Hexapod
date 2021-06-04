@@ -171,7 +171,6 @@ def incdec():
             print("Error enviando caracter")
     try:
         ser.close()
-        print("Enviado "+str(offsets_servos[servoselected-1][articselected]))
     except:
         print("Error cerrando puerto serie")
     return render_template('servoffset.html', 

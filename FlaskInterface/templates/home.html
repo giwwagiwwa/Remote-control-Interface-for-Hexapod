@@ -1,6 +1,8 @@
 <!-- como el layout lo hemos definido en layout.html aqui solo va el codigo del body-->
 {% extends "layout.html" %}
 {% block content %}
-<h1>Estado: </h1>
+<h1>Interfaz web para la configuración del robot hexápodo </h1>
+<p>En la pestaña Servo Offset se permite modificar los offsets de cada servomotor y articulación.</p>
+<p style="color: chocolate;">¡Atención! Para acceder a la pestaña de Servo Offset, debe estar establecida la conexión Bluetooth con el Botboarduino</p>
 <img src="{{url_for('static',filename='hexapod.jpg')}}" width="500" height="500"/>
 {% endblock content %}
