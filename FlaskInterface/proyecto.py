@@ -75,6 +75,7 @@ def preservoffset():
     if hc06_direccion in stdoutdata.split():
         print("Conectado a BT")
         #intentamos abrir el puerto serie
+    #else:
         try:
             ser= serial.Serial(port=serie_port, 
                                baudrate=serie_baud)
