@@ -615,7 +615,7 @@ void FindServoOffsets()
         if (data == '+')
           asOffsets[sSN] += 5;		// increment by 5us
         else
-          asOffsets[sSN] -= 5;		// increment by 5us
+          asOffsets[sSN] -= 5;		// decrement by 5us
 
         Serial.print("    ");
         Serial.println(asOffsetsRead[sSN]+asOffsets[sSN], DEC);
