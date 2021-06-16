@@ -103,21 +103,21 @@
 #define cRMFemurPin     5   //Middle Right leg Hip Vertical
 #define cRMTibiaPin     6   //Middle Right leg Knee
 
-#define cRFCoxaPin      8   //Front Right leg Hip Horizontal
+#define cRFCoxaPin      10   //Front Right leg Hip Horizontal
 #define cRFFemurPin     9   //Front Right leg Hip Vertical
-#define cRFTibiaPin     10   //Front Right leg Knee
+#define cRFTibiaPin     8   //Front Right leg Knee
 
-#define cLRCoxaPin      16   //Rear Left leg Hip Horizontal
-#define cLRFemurPin     17   //Rear Left leg Hip Vertical
-#define cLRTibiaPin     18   //Rear Left leg Knee
+#define cLRCoxaPin      26   //Rear Left leg Hip Horizontal
+#define cLRFemurPin     25   //Rear Left leg Hip Vertical
+#define cLRTibiaPin     24   //Rear Left leg Knee
 
 #define cLMCoxaPin      20   //Middle Left leg Hip Horizontal
 #define cLMFemurPin     21   //Middle Left leg Hip Vertical
 #define cLMTibiaPin     22   //Middle Left leg Knee
 
-#define cLFCoxaPin      24   //Front Left leg Hip Horizontal
-#define cLFFemurPin     25   //Front Left leg Hip Vertical
-#define cLFTibiaPin     26   //Front Left leg Knee
+#define cLFCoxaPin      16   //Front Left leg Hip Horizontal
+#define cLFFemurPin     17   //Front Left leg Hip Vertical
+#define cLFTibiaPin     18   //Front Left leg Knee
 
 //  ///////////////////////
 //  /// MIN/MAX ANGLES  ///
