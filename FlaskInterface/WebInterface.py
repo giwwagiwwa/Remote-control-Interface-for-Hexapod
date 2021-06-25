@@ -75,7 +75,6 @@ def preservoffset():
     if hc06_direccion in stdoutdata.split():
         print("Conectado a BT")
         #intentamos abrir el puerto serie
-    #else:
         try:
             ser= serial.Serial(port=serie_port, 
                                baudrate=serie_baud)
@@ -83,14 +82,12 @@ def preservoffset():
             ser.write(b"O")
             time.sleep(1)
             bytes_recibidos = ser.readline() #linea cmd eok...
+            #separar los valores por comas
             bytes_recibidos = ser.readline().decode('utf-8').strip().split(",")
             ser.close()
         except:
             print("Error abriendo puerto serie")
-            #datos de prueba
-            bytes_recibidos = ['-1','-2','-3','-4','-5','-6',
-                               '-7','-8','-9','-10','-11','-12',
-                               '-13','-14','-15','-16','-17','-18',]
+
         #Guardamos los datos recibidos en la estructura local
         indice = 0
         for servo in offsets_servos:
