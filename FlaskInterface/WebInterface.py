@@ -196,7 +196,7 @@ def recogerdato():
     try:
         ser= serial.Serial(port=serie_port, baudrate=serie_baud)
         ser.write(bytes(dato,encoding='utf-8'))
-        print(dato)
+        print(dato) #por la consola de flask
         ser.close()
     except:
         print("Error abriendo puerto serie")
