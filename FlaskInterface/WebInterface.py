@@ -1,3 +1,9 @@
+#*******************
+#Autor: Miquel EJ  *
+#     2021         *
+#*******************
+
+
 import time, subprocess as sp, serial
 from flask import Flask, request
 from flask.templating import render_template
